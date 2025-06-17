@@ -18,12 +18,14 @@ btnCloseProfile.addEventListener('click', () => {
 
 async function listar() {
 
-    const idUser = sessionStorage.getItem('userID')
+    const idUser = sessionStorage.getItem('userID');
+    const tokenJwt = sessionStorage.getItem('token')
     try {
         const response = await fetch(`http://localhost:3000/${idUser}`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Autorization': `Bearer ${tokenJwt}`
             }
         });
 

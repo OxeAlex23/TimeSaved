@@ -24,7 +24,7 @@ formLogin.addEventListener('submit', async (e) => {
 
             localStorage.setItem("logged", "true");
             sessionStorage.setItem('userID', userID);
-            localStorage.setItem('token', token);
+            sessionStorage.setItem('token', token);
             
             window.location.href = '../profile/perfil.html'
         } else {
