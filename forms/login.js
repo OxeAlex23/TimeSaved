@@ -23,7 +23,7 @@ formLogin.addEventListener('submit', async (e) => {
             const token = data.token
 
             localStorage.setItem("logged", "true");
-            localStorage.setItem('userID', userID);
+            sessionStorage.setItem('userID', userID);
             localStorage.setItem('token', token);
             console.log("token: ", token, "id: " , userID)
 
