@@ -29,36 +29,42 @@ async function listar() {
             }
         });
 
-        const data = await response.json()
-        console.log(data)
+        const data = await response.json();
+        const eachTask = data.task
 
         if (response.ok) {
-            const tasksDiv = document.querySelector('.div-tasks');
 
-            const task = document.createElement('div');
-            task.classList.add('task');
+            eachTask.forEach(taskEach => {
+                const tasksDiv = document.querySelector('.div-tasks');
 
-            const inputText = document.createElement('input');
-            const inputBox = document.createElement('input');
-            inputBox.type = 'checkbox';
-            inputBox.id = 'checkbox'
-            inputText.value = data.task;
-            inputText.readOnly = true;
+                const task = document.createElement('div');
+                task.classList.add('task');
 
-            const btnEdit = document.createElement('button');
-            const btnDelete = document.createElement('button');
-            btnEdit.textContent = 'Editar';
-            btnDelete.textContent = 'Excluir';
+                const inputText = document.createElement('input');
+                const inputBox = document.createElement('input');
+                inputBox.type = 'checkbox';
+                inputBox.id = 'checkbox';
+                inputText.value = taskEach;
+                inputText.readOnly = true;
+
+                const btnEdit = document.createElement('button');
+                const btnDelete = document.createElement('button');
+                btnEdit.textContent = 'Editar';
+                btnDelete.textContent = 'Excluir';
+
+                task.append(inputBox, inputText, btnEdit, btnDelete);
+                tasksDiv.appendChild(task);
+            });
 
 
-
-            task.append(inputBox, inputText, btnEdit, btnDelete)
-            tasksDiv.appendChild(task)
+        } else {
+            console.log('erro ao buscar dados!')
         }
+
     } catch (err) {
-        console.error('erro ao listar', err)
+        console.error('erro ao listar', err);
     };
 };
 
-listar()
+listar();
 
