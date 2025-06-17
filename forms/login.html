@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <title>Timesaved Login</title>
+</head>
+
+<body>
+
+    <form id="login-form">
+
+        <div class="header-form">
+            <div class="div-header">
+                <button id="btn-back"><a href="/index.html">Voltar</a></button>
+                <span id="span-header">Não tem conta? <a href="#">Registre-se!</a></span>
+            </div>
+            
+            <h1>Bem-Vindo de volta!</h1>
+        </div>
+
+        <div class="box-input">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Exemplo@gmail.com" required>
+        </div>
+
+        <div class="box-input">
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password" placeholder="********" required>
+        </div>
+
+
+        <button id="btn-login" type="submit">Entrar</button>
+        <span id="span-forgot-pass">Esqueceu a Senha? Click <a href="#">Aqui!</a></span>
+    </form>
+
+    <script src="login.js"></script>
+</body>
+
+</html>
