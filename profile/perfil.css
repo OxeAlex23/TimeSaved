@@ -105,3 +105,62 @@ main {
     height: 20px;
     margin-left: 5px;
 }
+
+.profile {
+    display: none;
+    flex-direction: column;
+    width: 250px;
+    height: 500px;
+    background-color: gray;
+    color: white;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 10px;
+}
+
+.header-profile {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(48, 48, 48, 0.767);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 400px;
+}
+
+.div-logout {
+    display: flex;
+    width: 100%;
+    height: 50px;
+    align-items: end;
+}
+
+#btn-logout {
+    width: 70px;
+    height: 30px;
+    cursor: pointer;
+    background-color: rgb(255, 0, 0);
+    color: white;
+    border: 1px solid rgba(48, 48, 48, 0.767);
+}
+
+#btn-logout:hover, #btn-close-profile:hover {
+    opacity: 0.8;
+}
+
+#btn-close-profile {
+    width: 40px;
+    height: 30px;
+    cursor: pointer;
+    background-color: red;
+    border: 1px solid rgba(48, 48, 48, 0.767);
+    color: white;
+    font-weight: bolder;
+}
