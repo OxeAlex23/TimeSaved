@@ -25,8 +25,14 @@ formLogin.addEventListener('submit', async (e) => {
             localStorage.setItem("logged", "true");
             sessionStorage.setItem('userID', userID);
             sessionStorage.setItem('token', token);
+
+            if (token) {
+                 window.location.href = '../profile/perfil.html'
+            } else {
+                window.location.href = 'home.html'
+            }
             
-            window.location.href = '../profile/perfil.html'
+           
         } else {
              console.log('Login não autorizado!');
              console.error(data.msg)

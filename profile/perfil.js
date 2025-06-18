@@ -20,7 +20,7 @@ async function listar() {
 
     const idUser = sessionStorage.getItem('userID');
     const tokenJwt = sessionStorage.getItem('token');
-    console.log(tokenJwt)
+
     try {
         const response = await fetch(`http://localhost:3000/${idUser}`, {
             method: "GET",
@@ -54,7 +54,8 @@ async function listar() {
                 btnEdit.textContent = 'Editar';
                 btnDelete.textContent = 'Excluir';
                 btnEdit.classList.add('btn-edit');
-                btnDelete.classList.add('btn-delete')
+                btnDelete.classList.add('btn-delete');
+                inputText.style.width = (inputText.value.length + 1) + 'ch';
 
                 task.append(inputBox, inputText, btnEdit, btnDelete);
                 tasksDiv.appendChild(task);
@@ -73,12 +74,13 @@ async function listar() {
 
                         lastIndexEdited = index;
 
-                        const editingTask = prompt(`Editando tarefa ${inputText}: `);
+                        const editingTask = prompt(`Editando tarefa ${inputText.value}: `, inputText.value);
 
                         if (editingTask !== null && editingTask.trim() !== '') {
-                            inputText.value = editingTask;
+                            inputText.value = editingTask.trim();
                             saveInBack(inputText);
                         }
+
                     });
                 });
 
@@ -108,6 +110,8 @@ async function listar() {
                 } catch (err) {
                     console.error('erro ao salvar no bd', err)
                 }
+
+                alert(`Tarefa ${lastIndexEdited + 1} atualizada com Sucesso!`)
             };
 
            const btnAdd = document.getElementById('create-task');
@@ -119,10 +123,10 @@ async function listar() {
            })
 
             async function createTask(tasks) {
-                
+
                 const tasksSend = {
                     tasks: tasks
-                }
+                };
 
                 try {   
                     const response = await fetch(`http://localhost:3000/createTasks/${idUser}`, {
@@ -137,17 +141,56 @@ async function listar() {
                     
 
                     if (!response.ok) {
-                        throw new Error('erro ao enviar json')
+                        throw new Error('erro ao enviar json');
+                    } else {
+                        window.location.reload();
+                        alert('Tarefa adiciona com sucesso!');
                     }
                 } catch(err) {
                     console.error('erro ao criar task', err)
-                }
-            }
+                };
+            };
+
+            const btnDelete = document.querySelectorAll('.btn-delete');
+            const inputsTexts = Array.from(document.querySelectorAll('.input-text'))
+
+            let indexClicked = -1;
+
+            btnDelete.forEach(excluir => {
+                excluir.addEventListener('click', function () {
+                    const divTask = this.closest('.task');
+                    const inputText = divTask.querySelector('.input-text');
+
+                    const index = inputsTexts.indexOf(inputText);
+                    indexClicked = index;
+                    deleteTask(index);
+                });
+            });
+
+            async function deleteTask(index) {
+                try {
+                    const response = await fetch(`http://localhost:3000/deleteTask/${idUser}/${index}`, {
+                        method: "DELETE",
+                        headers: {
+                            'Autorization' : `Bearer ${tokenJwt}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('erro na resposta');
+                    } else {
+                        window.location.reload();
+                        alert(`Tarefa ${index + 1} excluida com sucesso!`);
+                    }
+                } catch (err) {
+                    console.error('erro ao excluir', err);
+                };
+            };
 
 
         } else {
-            console.log('erro ao buscar dados!')
-        }
+            console.log('erro ao buscar dados!');
+        };
 
     } catch (err) {
         console.error('erro ao listar', err);
