@@ -19,7 +19,8 @@ btnCloseProfile.addEventListener('click', () => {
 async function listar() {
 
     const idUser = sessionStorage.getItem('userID');
-    const tokenJwt = sessionStorage.getItem('token')
+    const tokenJwt = sessionStorage.getItem('token');
+    console.log(tokenJwt)
     try {
         const response = await fetch(`http://localhost:3000/${idUser}`, {
             method: "GET",
@@ -106,6 +107,40 @@ async function listar() {
                     }
                 } catch (err) {
                     console.error('erro ao salvar no bd', err)
+                }
+            };
+
+           const btnAdd = document.getElementById('create-task');
+
+           btnAdd.addEventListener('click', () => {
+            const tasks = prompt('Digite sua tarefa: ');
+
+             createTask(tasks);
+           })
+
+            async function createTask(tasks) {
+                
+                const tasksSend = {
+                    tasks: tasks
+                }
+
+                try {   
+                    const response = await fetch(`http://localhost:3000/createTasks/${idUser}`, {
+                        method: "PATCH",
+                        headers: {
+                            'Content-Type' : 'application/json',
+                            'Autorization': `Bearer ${tokenJwt}`
+                        },
+                        body: JSON.stringify(tasksSend)
+                    })
+
+                    
+
+                    if (!response.ok) {
+                        throw new Error('erro ao enviar json')
+                    }
+                } catch(err) {
+                    console.error('erro ao criar task', err)
                 }
             }
 
