@@ -46,15 +46,68 @@ async function listar() {
                 inputBox.id = 'checkbox';
                 inputText.value = taskEach;
                 inputText.readOnly = true;
+                inputText.classList.add('input-text');
 
                 const btnEdit = document.createElement('button');
                 const btnDelete = document.createElement('button');
                 btnEdit.textContent = 'Editar';
                 btnDelete.textContent = 'Excluir';
+                btnEdit.classList.add('btn-edit');
+                btnDelete.classList.add('btn-delete')
 
                 task.append(inputBox, inputText, btnEdit, btnDelete);
                 tasksDiv.appendChild(task);
             });
+
+
+            function editTask() {
+                const btnEdit = document.querySelectorAll('.btn-edit');
+                const allInputsText = Array.from(document.querySelectorAll('.input-text'));
+                btnEdit.forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const divTask = this.closest('.task');
+                        let inputText = divTask.querySelector('.input-text');
+
+                        const index = allInputsText.indexOf(inputText);
+
+                        lastIndexEdited = index;
+
+                        const editingTask = prompt(`Editando tarefa ${inputText}: `);
+
+                        if (editingTask !== null && editingTask.trim() !== '') {
+                            inputText.value = editingTask;
+                            saveInBack(inputText);
+                        }
+                    });
+                });
+
+            }
+
+            let lastIndexEdited = -1
+
+            editTask();
+
+            async function saveInBack(input) {
+                const newTaskSend = {
+                    newTask: input.value
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:3000/editTask/${idUser}/${lastIndexEdited}`, {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(newTaskSend)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erro! status: ${response.status}`)
+                    }
+                } catch (err) {
+                    console.error('erro ao salvar no bd', err)
+                }
+            }
 
 
         } else {
@@ -67,4 +120,3 @@ async function listar() {
 };
 
 listar();
-
