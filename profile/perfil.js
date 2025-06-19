@@ -19,6 +19,11 @@ async function listar() {
     const idUser = sessionStorage.getItem('userID');
     const tokenJwt = sessionStorage.getItem('token');
 
+    if (!tokenJwt) {
+        window.location.href = '../forms/login.html';
+        alert('Você deve estar logado para acessar essa página! Realize o login ou crie sua conta!');
+    }
+
     try {
         const response = await fetch(`http://localhost:3000/${idUser}`, {
             method: "GET",
