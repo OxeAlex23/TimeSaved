@@ -15,9 +15,7 @@ btnCloseProfile.addEventListener('click', () => {
 ////////////////////////////////////////////////// profile ^
 
 
-
 async function listar() {
-
     const idUser = sessionStorage.getItem('userID');
     const tokenJwt = sessionStorage.getItem('token');
 
@@ -26,26 +24,30 @@ async function listar() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                'Autorization': `Bearer ${tokenJwt}`
+                'Authorization': `Bearer ${tokenJwt}` 
             }
         });
 
         const data = await response.json();
-        const eachTask = data.task
 
         if (response.ok) {
+            const eachTask = data.task; 
+
+            const tasksDiv = document.querySelector('.div-tasks');
 
             eachTask.forEach(taskEach => {
-                const tasksDiv = document.querySelector('.div-tasks');
-
                 const task = document.createElement('div');
                 task.classList.add('task');
+                task.dataset.id = taskEach._id;
 
                 const inputText = document.createElement('input');
                 const inputBox = document.createElement('input');
                 inputBox.type = 'checkbox';
+                inputBox.checked = taskEach.checked;
                 inputBox.id = 'checkbox';
-                inputText.value = taskEach;
+                inputBox.classList.add('checkbox');
+
+                inputText.value = taskEach.description;
                 inputText.readOnly = true;
                 inputText.classList.add('input-text');
 
@@ -55,137 +57,168 @@ async function listar() {
                 btnDelete.textContent = 'Excluir';
                 btnEdit.classList.add('btn-edit');
                 btnDelete.classList.add('btn-delete');
+
                 inputText.style.width = (inputText.value.length + 1) + 'ch';
 
                 task.append(inputBox, inputText, btnEdit, btnDelete);
                 tasksDiv.appendChild(task);
+
+                inputBox.addEventListener('change', () => {
+                    toggleTask(idUser, taskEach._id);
+                });
             });
+
+
+            async function toggleTask(userId, taskId) {
+                const token = sessionStorage.getItem('token');
+
+                try {
+                    const response = await fetch(`http://localhost:3000/toggleTask/${userId}/${taskId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erro na atualização: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Tarefa atualizada');
+                } catch (err) {
+                    console.error('Erro ao atualizar tarefa:', err);
+                }
+            }
 
 
             function editTask() {
                 const btnEdit = document.querySelectorAll('.btn-edit');
-                const allInputsText = Array.from(document.querySelectorAll('.input-text'));
                 btnEdit.forEach(btn => {
                     btn.addEventListener('click', function () {
                         const divTask = this.closest('.task');
-                        let inputText = divTask.querySelector('.input-text');
+                        const inputText = divTask.querySelector('.input-text');
+                        const taskId = divTask.dataset.id;
 
-                        const index = allInputsText.indexOf(inputText);
-
-                        lastIndexEdited = index;
-
-                        const editingTask = prompt(`Editando tarefa ${inputText.value}: `, inputText.value);
+                        const editingTask = prompt(`Editando tarefa: ${inputText.value}`, inputText.value);
 
                         if (editingTask !== null && editingTask.trim() !== '') {
                             inputText.value = editingTask.trim();
-                            saveInBack(inputText);
-                        }
 
+                            saveInBack(taskId, inputText.value);
+                        }
                     });
                 });
-
             }
-
-            let lastIndexEdited = -1
 
             editTask();
 
-            async function saveInBack(input) {
+            async function saveInBack(taskId, newDescription) {
+                const idUser = sessionStorage.getItem('userID');
+                const token = sessionStorage.getItem('token');
+
                 const newTaskSend = {
-                    newTask: input.value
-                }
+                    description: newDescription
+                };
 
                 try {
-                    const response = await fetch(`http://localhost:3000/editTask/${idUser}/${lastIndexEdited}`, {
+                    const response = await fetch(`http://localhost:3000/editTask/${idUser}/${taskId}`, {
                         method: "PUT",
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify(newTaskSend)
                     });
 
                     if (!response.ok) {
-                        throw new Error(`Erro! status: ${response.status}`)
+                        throw new Error(`Erro! status: ${response.status}`);
                     }
+
+                    alert(`Tarefa atualizada com sucesso!`);
                 } catch (err) {
-                    console.error('erro ao salvar no bd', err)
+                    console.error('Erro ao salvar no bd', err);
+                    alert('Erro ao atualizar tarefa.');
                 }
+            }
 
-                alert(`Tarefa ${lastIndexEdited + 1} atualizada com Sucesso!`)
-            };
+            const btnAdd = document.getElementById('create-task');
 
-           const btnAdd = document.getElementById('create-task');
+            btnAdd.addEventListener('click', () => {
+                const taskDescription = prompt('Digite sua tarefa: ');
+                if (taskDescription && taskDescription.trim() !== '') {
+                    createTask(taskDescription.trim());
+                } else {
+                    alert('Tarefa não pode ser vazia!');
+                }
+            });
 
-           btnAdd.addEventListener('click', () => {
-            const tasks = prompt('Digite sua tarefa: ');
+            async function createTask(taskDescription) {
+                const idUser = sessionStorage.getItem('userID');
+                const tokenJwt = sessionStorage.getItem('token');
 
-             createTask(tasks);
-           })
+                const tasksSend = [
+                    {
+                        description: taskDescription,
+                        checked: false
+                    }
+                ];
 
-            async function createTask(tasks) {
-
-                const tasksSend = {
-                    tasks: tasks
-                };
-
-                try {   
+                try {
                     const response = await fetch(`http://localhost:3000/createTasks/${idUser}`, {
                         method: "PATCH",
                         headers: {
-                            'Content-Type' : 'application/json',
-                            'Autorization': `Bearer ${tokenJwt}`
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${tokenJwt}` 
                         },
-                        body: JSON.stringify(tasksSend)
-                    })
-
-                    
+                        body: JSON.stringify({ tasks: tasksSend }) 
+                    });
 
                     if (!response.ok) {
-                        throw new Error('erro ao enviar json');
+                        throw new Error('Erro ao enviar JSON');
                     } else {
+                        alert('Tarefa adicionada com sucesso!');
                         window.location.reload();
-                        alert('Tarefa adiciona com sucesso!');
                     }
-                } catch(err) {
-                    console.error('erro ao criar task', err)
-                };
-            };
+                } catch (err) {
+                    console.error('Erro ao criar task', err);
+                }
+            }
 
             const btnDelete = document.querySelectorAll('.btn-delete');
-            const inputsTexts = Array.from(document.querySelectorAll('.input-text'))
 
-            let indexClicked = -1;
-
-            btnDelete.forEach(excluir => {
-                excluir.addEventListener('click', function () {
+            btnDelete.forEach(btn => {
+                btn.addEventListener('click', function () {
                     const divTask = this.closest('.task');
-                    const inputText = divTask.querySelector('.input-text');
+                    const taskId = divTask.dataset.id;
 
-                    const index = inputsTexts.indexOf(inputText);
-                    indexClicked = index;
-                    deleteTask(index);
+                    deleteTask(taskId);
                 });
             });
 
-            async function deleteTask(index) {
+            async function deleteTask(taskId) {
+                const idUser = sessionStorage.getItem('userID');
+                const tokenJwt = sessionStorage.getItem('token');
+
                 try {
-                    const response = await fetch(`http://localhost:3000/deleteTask/${idUser}/${index}`, {
+                    const response = await fetch(`http://localhost:3000/deleteTask/${idUser}/${taskId}`, {
                         method: "DELETE",
                         headers: {
-                            'Autorization' : `Bearer ${tokenJwt}`
+                            'Authorization': `Bearer ${tokenJwt}`
                         }
                     });
 
                     if (!response.ok) {
-                        throw new Error('erro na resposta');
+                        throw new Error('Erro na resposta');
                     } else {
+                        alert('Tarefa excluída com sucesso!');
                         window.location.reload();
-                        alert(`Tarefa ${index + 1} excluida com sucesso!`);
                     }
                 } catch (err) {
-                    console.error('erro ao excluir', err);
-                };
-            };
+                    console.error('Erro ao excluir', err);
+                }
+            }
+
 
 
         } else {
@@ -198,3 +231,12 @@ async function listar() {
 };
 
 listar();
+
+//////////////////////////////// logout
+document.getElementById('btn-logout').addEventListener('click', logout);
+
+function logout() {
+  sessionStorage.clear();
+  
+  window.location.href = '../home.html';
+}
