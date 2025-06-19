@@ -1,0 +1,106 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(209, 209, 209);
+    height: 540px;
+    width: 500px;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid rgba(48, 48, 48, 0.767);
+}
+
+.box-input  {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+label {
+    color: rgb(51, 51, 51);
+    font-size: 18px;
+}
+
+#email, #password, #name, #birthdate {
+    width: 400px;
+    height: 40px;
+    border: 1px solid rgba(48, 48, 48, 0.767);
+    outline: none;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+#email:focus, #password:focus, #name:focus, #birthdate:focus {
+    border: 2px solid rgba(48, 48, 48, 0.767);
+}
+
+#btn-register {
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    margin-top: 15px;
+    border: 1px solid rgba(48, 48, 48, 0.767);
+    border-radius: 2px;
+}
+
+#btn-register:hover {
+    background-color: rgb(188, 189, 189);
+}
+
+#span-forgot-pass {
+    font-size: 10px;
+    color: rgb(85, 84, 84);
+    margin-top: 8px;
+}
+
+.header-form {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    width: 100%;
+    align-items: center;
+}
+
+#span-header {
+    font-size: 10px;
+    margin-left: 15px;
+    width: 120px;
+    color: rgb(85, 84, 84);
+}
+
+#btn-back {
+    width: 80px;
+    height: 27px;
+    margin-left: 5px;
+    cursor: pointer;
+    background-color: rgb(238, 198, 205);
+    border: 1px solid rgba(48, 48, 48, 0.767);
+}
+
+#btn-back:hover {
+    opacity: 0.8;
+}
+
+.div-header {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-form h1 {
+    margin-top: 25px;
+}

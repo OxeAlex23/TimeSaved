@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="register.css">
+    <title>Crie sua Conta!</title>
+</head>
+<body>
+     <form id="form-register">
+
+        <div class="header-form">
+            <div class="div-header">
+                <button id="btn-back"><a href="../home.html">Voltar</a></button>
+                <span id="span-header">Já tem conta? <a href="#">Entre!</a></span>
+            </div>
+            
+            <h1>Junte-se a nós!</h1>
+        </div>
+
+          <div class="box-input">
+            <label for="name">Nome:</label>
+            <input type="text" name="name" id="name" placeholder="Digite seu nome" required>
+        </div>
+
+        <div class="box-input">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Exemplo@gmail.com" required>
+        </div>
+
+        <div class="box-input">
+            <label for="password">Criar Senha:</label>
+            <input type="password" name="password" id="password" placeholder="********" required>
+        </div>
+
+         <div class="box-input">
+            <label for="birthdate">Data de Nascimento:</label>
+            <input type="date" name="birthdate" id="birthdate" required>
+        </div>
+
+
+        <button id="btn-register" type="submit">Criar Conta</button>
+
+    </form>
+    <script src="register.js"></script>
+</body>
+</html>
